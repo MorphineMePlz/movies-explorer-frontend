@@ -4,6 +4,8 @@ import './App.css';
 import Header from '../Header/Header';
 import MainPage from '../MainPage/MainPage';
 import Footer from '../Footer/Footer';
+import PageWrapper from '../PageWrapper/PageWrapper';
+// import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -31,21 +33,17 @@ function App() {
           exact='true'
           path='/'
           element={
-            <>
-             <Header loggedIn={loggedIn} />
+             <PageWrapper >
               <MainPage /> 
-              <Footer />
-            </>
+              </PageWrapper>
              }
           />
-          {/* <Route path='/movies' element={
-            <ProtectedRoute loggedIn={loggedIn}>
-            <Header loggedIn={loggedIn} />
-              <Movies />
-              <Footer />
-            </ProtectedRoute>
+          <Route path='/movies' element={
+            <PageWrapper>
+              TEST
+            </PageWrapper>
           }
-          /> */}
+          />
           {/* <Route path='/saved-movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
               <Header loggedIn={loggedIn} />

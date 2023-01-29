@@ -34,9 +34,6 @@
     text-decoration: none;
 }
 
-/* .header__logo {
-    animation: move 10s infinite linear;
-} */
 
 @media screen and (max-width: 769px) {
     .header {
