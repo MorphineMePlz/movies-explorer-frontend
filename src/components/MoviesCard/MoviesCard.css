@@ -42,8 +42,14 @@
 }
 
 .card__button_saved {
-    background-image: url("../../assets//images/save.svg");
+    background-image: url("../../assets/images/save.svg");
     background-color: black;
+}
+
+.card__button_delete {
+    background-image: url("../../assets/images/delete.svg");
+    background-color: #F9F9F9;
+    border-radius: 36px;
 }
 
 .card__subtitle {

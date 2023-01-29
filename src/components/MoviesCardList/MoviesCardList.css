@@ -26,3 +26,26 @@
 .cards__button:hover {
     filter: invert();
 }
+
+@media screen and (max-width: 769px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+
+    }
+}
+
+@media screen and (max-width: 580px) {
+    .cards {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .cards__button {
+        margin-top: 50px;
+
+    }
+}

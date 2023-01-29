@@ -29,6 +29,7 @@
     background-repeat: no-repeat;
     transition: .2s;
     cursor: pointer;
+    margin-right: 30px;
 }
 
 .search__submit:hover {

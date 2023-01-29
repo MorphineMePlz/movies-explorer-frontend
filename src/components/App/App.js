@@ -42,6 +42,13 @@ function App() {
           <Route path='/movies' element={
             <>
               <SearchForm />
+              <MoviesCardList isSavedMovies />
+            </>
+          }
+          />
+          <Route path='/saved-movies' element={
+            <>
+              <SearchForm />
               <MoviesCardList />
             </>
           }
