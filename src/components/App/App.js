@@ -1,17 +1,22 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import './App.css';
+
 import MainPage from '../MainPage/MainPage';
 import PageWrapper from '../PageWrapper/PageWrapper';
+import SearchForm from '../SearchForm/SearchForm';
+import MoviesCardList from '../MoviesCardList/MoviesCardList';
 // import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+
+import './App.css';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
 
   return (
     <div className="App">
-      <Routes>
-        {/* <Route
+      <PageWrapper isLoggedIn={isLoggedIn}>
+        <Routes>
+          {/* <Route
           path='/signup'
           element={ <Register
             loggedIn={loggedIn}
@@ -19,7 +24,7 @@ function App() {
             />
           }
         /> */}
-        {/* <Route
+          {/* <Route
           path='/signin'
           element={ <Login
             loggedIn={loggedIn}
@@ -27,22 +32,21 @@ function App() {
             />
           }
         /> */}
-        <Route
-          exact='true'
-          path='/'
-          element={
-            <PageWrapper >
+          <Route
+            exact='true'
+            path='/'
+            element={
               <MainPage />
-            </PageWrapper>
+            }
+          />
+          <Route path='/movies' element={
+            <>
+              <SearchForm />
+              <MoviesCardList />
+            </>
           }
-        />
-        <Route path='/movies' element={
-          <PageWrapper>
-            TEST
-          </PageWrapper>
-        }
-        />
-        {/* <Route path='/saved-movies' element={
+          />
+          {/* <Route path='/saved-movies' element={
             <ProtectedRoute loggedIn={loggedIn}>
               <Header loggedIn={loggedIn} />
               <SavedMovies />
@@ -50,18 +54,17 @@ function App() {
             </ProtectedRoute>
           }
           /> */}
-        <Route path='/profile' element={
-          // <ProtectedRoute loggedIn={loggedIn}>
+          <Route path='/profile' element={
+            // <ProtectedRoute loggedIn={loggedIn}>
 
-          <PageWrapper isLoggedIn={isLoggedIn} >
-            TEST
-          </PageWrapper>
-          /* <Profile /> */
-          /* </ProtectedRoute> */
-        }
-        />
-        {/* <Route path='*' element={ <NotFound /> } /> */}
-      </Routes>
+            <>TEST</>
+            /* <Profile /> */
+            /* </ProtectedRoute> */
+          }
+          />
+          {/* <Route path='*' element={ <NotFound /> } /> */}
+        </Routes>
+      </PageWrapper>
     </div>
   );
 }
