@@ -10,7 +10,7 @@ import Registration from '../Registration/Registration';
 import NotFound from '../NotFound/NotFound';
 
 // import Preloader from "../Preloader/Preloader";
-// import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import { PROFILE_MOCK_DATA } from '../../utils';
 
@@ -18,7 +18,7 @@ import './App.css';
 
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(true);
 
   return (
     <div className="App">
@@ -55,20 +55,10 @@ function App() {
             </>
           }
           />
-          {/* <Route path='/saved-movies' element={
-            <ProtectedRoute loggedIn={loggedIn}>
-              <Header loggedIn={loggedIn} />
-              <SavedMovies />
-              <Footer />
-            </ProtectedRoute>
-          }
-          /> */}
           <Route path='/profile' element={
-            // <ProtectedRoute loggedIn={loggedIn}>
-
-            <Profile data={PROFILE_MOCK_DATA} />
-            /* <Profile /> */
-            /* </ProtectedRoute> */
+            <ProtectedRoute loggedIn={isLoggedIn}>
+              <Profile data={PROFILE_MOCK_DATA} />
+            </ProtectedRoute>
           }
           />
           <Route path='*' element={<NotFound />} />
