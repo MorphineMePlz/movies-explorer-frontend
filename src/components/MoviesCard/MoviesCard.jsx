@@ -22,13 +22,14 @@ export default function MoviesCard({ data, isSavedMovies }) {
             </span>
             {isSavedMovies ?
                 <button type="button"
-                    className={`card__button ${saved ? "card__button_saved" : ""}`}
-                    onClick={() => handleSaveMovie(title)}
-                /> :
-                <button type="button"
                     className={`card__button card__button_delete`}
                     onClick={() => handleDeleteMovie(title)}
+                /> :
+                <button type="button"
+                    className={`card__button ${saved ? "card__button_saved" : ""}`}
+                    onClick={() => handleSaveMovie(title)}
                 />
+
             }
         </div>
         <img src={image} alt={title} className="card__image" />

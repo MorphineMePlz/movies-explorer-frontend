@@ -1,3 +1,9 @@
 @import url(./vendor/normalize.css);
 @import url(./vendor/fonts/inter_web/inter.css);
 @import url(./blocks/page.css);
+
+.wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}

@@ -1,12 +1,26 @@
+import { useMemo } from 'react';
+
+import { useLocation } from 'react-router-dom';
+
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
-export default function PageWrapper({ isLoggedIn, children }) {
+const WRAPPER_ROUTES = ["/", "/saved-movies", "/profile", "/movies"];
+const NO_FOOTER_ROUTES = ["/profile"]
+
+export default function PageWrapper({ isLoggedIn, handleLogin, children }) {
+    const location = useLocation();
+
+    const isWrapperHidden = useMemo(() => !WRAPPER_ROUTES.includes(location.pathname), [location.pathname])
+    const isFooterHidden = useMemo(() => NO_FOOTER_ROUTES.includes(location.pathname), [location.pathname]);
+
     return (
         <>
-            <Header isLoggedIn={isLoggedIn} />
-            {children}
-            <Footer />
+            {isWrapperHidden ? <>{children}</> : <>
+                <Header isLoggedIn={isLoggedIn} handleLogin={handleLogin} />
+                {children}
+                {!isFooterHidden && <Footer />}
+            </>}
         </>
     )
 }

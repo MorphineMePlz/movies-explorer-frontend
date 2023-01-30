@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import headerLogo from '../../assets/images/headerLogo.svg'
 import './Header.css'
 
-export default function Header({ isLoggedIn }) {
+export default function Header({ isLoggedIn, handleLogin }) {
     return (
         <>
             <header className='header'>
@@ -22,7 +22,10 @@ export default function Header({ isLoggedIn }) {
                     </div> :
                     <nav className='header__menu'>
                         <NavLink className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`} to='/signup'>Регистрация</NavLink>
-                        <NavLink className="header__link header__link_type_sign-in" to='/signin'>Войти</NavLink>
+                        <NavLink className="header__link header__link_type_sign-in" to='/signin'
+                            // TODO: remove after backend is connected
+                            onClick={handleLogin}
+                        >Войти</NavLink>
                     </nav>}
             </header>
 

@@ -29,7 +29,6 @@
     background-repeat: no-repeat;
     transition: .2s;
     cursor: pointer;
-    margin-right: 30px;
 }
 
 .search__submit:hover {
@@ -43,4 +42,16 @@
     margin-right: 30px;
     border-left: 1px solid #E8E8E8;
     padding-left: 29px;
+}
+
+@media screen and (max-width: 1200px) {
+    .search__input {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 769px) {
+    .search__input {
+        width: 40%;
+    }
 }

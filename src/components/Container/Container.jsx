@@ -1,7 +1,7 @@
 import "./Container.css";
 
-export default function Container({ children }) {
-    return <div className='wrapper'>
+export default function Container({ className = "", children }) {
+    return <div className={`wrapper ${className}`}>
         {children}
     </div>
 }
