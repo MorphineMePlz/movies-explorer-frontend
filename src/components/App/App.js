@@ -18,7 +18,7 @@ import './App.css';
 
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
 
   return (
     <div className="App">
@@ -38,6 +38,7 @@ function App() {
             path='/'
             element={
               <MainPage />
+
             }
           />
           <Route path='/movies' element={
