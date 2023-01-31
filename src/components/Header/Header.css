@@ -70,6 +70,17 @@
     margin-left: 44px;
 }
 
+.header__open-button {
+    background-image: url(../../assets//images/burger.svg);
+    background-repeat: no-repeat;
+    background-color: unset;
+    width: 44px;
+    height: 44px;
+    border: none;
+    cursor: pointer;
+    background-position: center;
+}
+
 
 @media screen and (max-width: 769px) {
     .header {

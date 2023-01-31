@@ -1,13 +1,15 @@
 
+import React from "react";
 import { NavLink } from 'react-router-dom'
 
 import './BurgerMenu.css'
 
-export default function BurgerMenu() {
+
+export default function BurgerMenu({ closeBurgerMenu, isBurgerMenuOpen, }) {
     return (
-        <div className="burger">
+        <div className={`burger ${isBurgerMenuOpen ? "burger_active" : ""}`}>
             <div className="burger__box">
-                <button className="burger__button-close"></button>
+                <button onClick={closeBurgerMenu} className="burger__button-close"></button>
                 <div className="burger__link-box">
                     <span className='burger__links'>
                         <NavLink className={({ isActive }) => `burger__link ${isActive ? "burger__link_active" : ""}`} to='/'>Главная</NavLink>

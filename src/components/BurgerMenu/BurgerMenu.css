@@ -11,6 +11,14 @@
     left: 0;
     bottom: 0;
     z-index: 5;
+    visibility: hidden;
+    opacity: 0;
+
+}
+
+.burger_active {
+    visibility: visible;
+    opacity: 100;
 }
 
 .burger__box {

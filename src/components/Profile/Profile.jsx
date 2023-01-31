@@ -15,17 +15,16 @@ export default function Profile({ data }) {
         <div className='profile__box'>
             <div className='profile__table-line'>
                 <p className='profile__placeholder'>Имя</p>
-                <input type="text" name="name" value={inputValues.name} onChange={handleChange
+                <input required type="text" name="name" value={inputValues.name} onChange={handleChange
                 } className='profile__input' />
             </div>
 
             <div className='profile__table-line'>
                 <p className='profile__placeholder'>E-mail</p>
-                <input type="email" name="email" value={inputValues.email} onChange={handleChange
+                <input required type="email" name="email" value={inputValues.email} onChange={handleChange
                 } className='profile__input' />
             </div>
         </div>
-
         <div className='profile__button-box'>
             <button type="button" className='profile__button'>Редактировать</button>
             <button type="button" className='profile__button profile__button_logout'>Выйти из аккаунта</button>

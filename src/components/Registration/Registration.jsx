@@ -50,20 +50,20 @@ export default function Registration({ isLogin, onSubmit }) {
             <div className='registration__box'>
                 {!isLogin && <div className='registration__field'>
                     <p className='registration__placeholder'>Имя</p>
-                    <input type="text" name="name" value={inputValues.name} onChange={handleChange
+                    <input required type="text" name="name" value={inputValues.name} onChange={handleChange
                     } className='registration__input' />
                 </div>}
 
 
                 <div className='registration__field'>
                     <p className='registration__placeholder'>E-mail</p>
-                    <input type="email" name="email" value={inputValues.email} onChange={handleChange
+                    <input required type="email" name="email" value={inputValues.email} onChange={handleChange
                     } className='registration__input' />
                 </div>
 
                 <div className='registration__field'>
                     <p className='registration__placeholder'>Пароль</p>
-                    <input type="password" name="password" value={inputValues.password} onChange={handleChange
+                    <input required type="password" name="password" value={inputValues.password} onChange={handleChange
                     } className='registration__input' />
                 </div>
             </div>
