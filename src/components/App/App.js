@@ -12,12 +12,12 @@ import NotFound from "../NotFound/NotFound";
 // import Preloader from "../Preloader/Preloader";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
-import { PROFILE_MOCK_DATA } from "../../utils";
+import { PROFILE_MOCK_DATA } from "../../utils/utils";
 
 import "./App.css";
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(true);
 
   return (
     <div className="App">

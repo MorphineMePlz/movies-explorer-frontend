@@ -1,29 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/headerLogo.svg";
+import { INITIAL_VALUES, REGISTRATION_TEXTS, LOGIN_TEXTS } from "../../utils/utils";
 
 import "./Authorization.css";
 
-const INITIAL_VALUES = {
-  email: "",
-  password: ""
-};
 
-const REGISTRATION_TEXTS = {
-  heading: "Добро пожаловать!",
-  button: "Зарегистрироваться",
-  linkText: "Уже зарегистрированы? ",
-  link: "Войти",
-  route: "/signin"
-};
-
-const LOGIN_TEXTS = {
-  heading: "Рады видеть!",
-  button: "Войти",
-  linkText: "Ещё не зарегистрированы? ",
-  link: "Регистрация",
-  route: "/signup"
-};
 
 export default function Authorization({ isLogin, onSubmit }) {
   const texts = isLogin ? LOGIN_TEXTS : REGISTRATION_TEXTS;
@@ -44,7 +26,7 @@ export default function Authorization({ isLogin, onSubmit }) {
       <img src={logo} alt="logo" className="authorization__logo" />
       <h1 className="authorization__heading">{texts.heading}</h1>
       <form
-        className="registraion__form"
+        className="authorization__form"
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
@@ -91,9 +73,8 @@ export default function Authorization({ isLogin, onSubmit }) {
         </div>
 
         <div
-          className={`authorization__button-box ${
-            isLogin ? "authorization__button_box_signin" : ""
-          }`}
+          className={`authorization__button-box ${isLogin ? "authorization__button_box_signin" : ""
+            }`}
         >
           <button type="submit" className="authorization__button">
             {texts.button}

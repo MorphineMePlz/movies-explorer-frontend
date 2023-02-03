@@ -2,16 +2,12 @@ import { useState } from "react";
 
 import Container from '../Container/Container';
 import MoviesCard from '../MoviesCard/MoviesCard'
-import image from "../../assets/images/movie_pic.jpg";
+import { MOCK_DATA } from "../../utils/utils";
+
 
 import "./MoviesCardList.css";
 
-const MOCK_DATA = {
-    title: "33 слова о дизайне",
-    length: "1 ч 47 м",
-    image,
-    isSaved: false
-}
+
 
 export default function MoviesCardList({ isSavedMovies }) {
     const [currentCards, setCurrentCards] = useState(12);

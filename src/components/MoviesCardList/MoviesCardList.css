@@ -31,6 +31,7 @@
   .cards {
     max-width: 90%;
     margin: 70px auto;
+    margin-bottom: 80px;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
   }
@@ -47,5 +48,11 @@
 
   .cards__button {
     margin-top: 50px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .cards {
+    margin: 70px auto 80px;
   }
 }

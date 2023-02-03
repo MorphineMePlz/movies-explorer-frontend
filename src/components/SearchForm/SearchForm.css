@@ -1,5 +1,5 @@
 .search {
-  margin: 55px 0;
+  margin: 70px 70px 80px 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,7 +59,18 @@
   }
 }
 
-@media screen and (max-width: 769px) {
+@media screen and (max-width: 768px) {
+  .search {
+    margin: 80px 30px 120px 30px;
+  }
+
+  .search__input {
+    width: 76%;
+  }
+}
+
+
+@media screen and (max-width: 700px) {
   .search {
     flex-wrap: wrap;
     align-items: center;
@@ -79,7 +90,6 @@
   .search__input {
     margin: 0 10px 0 0;
     padding: 25px 0;
-    width: 80%;
   }
 
   .search__checkbox {
@@ -89,5 +99,12 @@
     margin: 39px 0 0 0;
     padding-bottom: 39px;
     border-bottom: 1px solid #e8e8e8;
+  }
+}
+
+
+@media screen and (max-width: 400px) {
+  .search {
+    margin: 80px 10px 120px 10px;
   }
 }
