@@ -3,7 +3,13 @@
 @import url(./blocks/page.css);
 
 .wrapper {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
+  width: 90%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 769px) {
+  .wrapper {
+    width: 90%;
+  }
 }

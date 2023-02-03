@@ -15,9 +15,6 @@ function Student() {
           </p>
           <ul className="student__social-links">
             <li className="student__social-link-item">
-              <a href="https://facebook.com/" target="_blank" rel="noreferrer" className="student__social-link">Facebook</a>
-            </li>
-            <li className="student__social-link-item">
               <a href="https://github.com/" target="_blank" rel="noreferrer" className="student__social-link">Github</a>
             </li>
           </ul>

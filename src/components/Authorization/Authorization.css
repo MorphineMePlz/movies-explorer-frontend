@@ -1,0 +1,114 @@
+.registration {
+  max-width: 396px;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 70px;
+}
+
+.registration__heading {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  margin: 0 0 40px 0;
+}
+
+.registration__logo {
+  margin-bottom: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+.registraion__form {
+  width: 100%;
+}
+
+.registration__placeholder {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #a0a0a0;
+}
+
+.registration__field {
+  margin: 0 0 24px 0;
+}
+
+.registration__input {
+  width: 100%;
+  margin: 0;
+  padding: 0 0 10px 0;
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  transition: 0.2s;
+}
+
+.authorization__input:focus {
+  border-bottom: 1px solid black;
+  outline: none;
+}
+
+.authorization__button-box {
+  width: 100%;
+  margin-top: 152px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.authorization__button_box_signin {
+  margin-top: 227px;
+}
+
+.authorization__button {
+  color: white;
+  background: #000000;
+  border-radius: 3px;
+  padding: 13px 0 15px 0;
+  width: 100%;
+  margin-bottom: 16px;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.authorization__button:hover {
+  transform: scale(1.03);
+  opacity: 0.7;
+}
+
+.authorization__subline {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #a0a0a0;
+}
+
+.authorization__link {
+  color: black;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.authorization__link:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 580px) {
+  .authorization {
+    align-items: center;
+    width: 90%;
+  }
+
+  .authorization__heading {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+}
