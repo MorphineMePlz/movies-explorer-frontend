@@ -14,13 +14,12 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 import { PROFILE_MOCK_DATA } from "../../utils/utils";
 
-import "./App.css";
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(true);
 
   return (
-    <div className="App">
+    <div className="page">
       <PageWrapper
         isLoggedIn={isLoggedIn}
         handleLogin={() => setLoggedIn(true)}

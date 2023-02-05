@@ -34,6 +34,7 @@ export default function SearchForm() {
             onChange={handleChange}
             className="search__input"
             placeholder='Фильмы'
+            required
           />
           <button type="submit" className="search__submit" />
         </div>
