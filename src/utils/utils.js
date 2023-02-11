@@ -31,3 +31,5 @@ export const MOCK_DATA = {
     image,
     isSaved: false
 }
+
+export const NAVIGATION_DELAY = 2000;

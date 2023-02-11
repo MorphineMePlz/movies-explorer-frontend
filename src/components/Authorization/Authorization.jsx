@@ -29,7 +29,7 @@ export default function Authorization({ isLogin, onSubmit }) {
         className="authorization__form"
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit();
+          onSubmit(inputValues);
         }}
       >
         <div className="authorization__box">
