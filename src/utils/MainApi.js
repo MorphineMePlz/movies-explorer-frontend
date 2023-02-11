@@ -40,7 +40,7 @@ class MainApi {
         }).then((res) => this.handleResponse(res));
     }
 
-    logout = () => {
+    logout() {
         return fetch(`${BASE_URL}/logout`, {
             method: "POST",
             credentials: 'include',
@@ -48,7 +48,7 @@ class MainApi {
         }).then((res) => this.handleResponse(res));
     }
 
-    checkTokenValidity = () => {
+    checkTokenValidity() {
         return fetch(`${BASE_URL}/users/me`, {
             credentials: 'include',
             headers: this._headers,
@@ -62,7 +62,7 @@ class MainApi {
         }).then((res) => this.handleResponse(res));
     }
 
-    editUserInformation({ name, email }) {
+    editUserInformation(name, email) {
         return fetch(`${this._address}/users/me`, {
             method: "PATCH",
             credentials: 'include',

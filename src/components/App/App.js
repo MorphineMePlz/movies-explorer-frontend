@@ -12,8 +12,7 @@ import NotFound from "../NotFound/NotFound";
 // import Preloader from "../Preloader/Preloader";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
-
-import { PROFILE_MOCK_DATA, NAVIGATION_DELAY } from "../../utils/utils";
+import { NAVIGATION_DELAY } from "../../utils/utils";
 import { mainApi } from "../../utils/MainApi";
 
 
@@ -29,11 +28,10 @@ function App() {
         if (data) {
           setLoggedIn(true)
           setCurrentUser(data)
-          // history('/')
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log("checkToken", err)
       })
   }, [isLoggedIn])
 
@@ -75,7 +73,16 @@ function App() {
       })
   };
 
-
+  const handleUpdateUser = ({ name, email }) => {
+    mainApi
+      .editUserInformation(name, email)
+      .then(newUserData => {
+        setCurrentUser(newUserData);
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -127,7 +134,7 @@ function App() {
               path="/profile"
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <Profile data={PROFILE_MOCK_DATA} />
+                  <Profile handleLogout={handleLogout} handleUpdateUser={handleUpdateUser} />
                 </ProtectedRoute>
               }
             />
