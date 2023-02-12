@@ -14,8 +14,7 @@ class Api {
     }
 
     getMovies() {
-        return fetch(`${this._address}/movies`, {
-            credentials: 'include',
+        return fetch(`${this._address}`, {
             headers: this._headers,
         }).then((res) => this.handleResponse(res));
     }

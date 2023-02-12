@@ -29,7 +29,7 @@ export default function Profile({ handleLogout, handleUpdateUser }) {
   }
 
   const InitialStateDisable = (currentUser.name === name && currentUser.email === email)
-  const activeStyleValidateBtn = (currentUser.name !== name || currentUser.email !== email)
+  const activeStyleValidateButton = (currentUser.name !== name || currentUser.email !== email)
 
   return (
     <form className='profile' onSubmit={handleSubmit(() => { handleSubmitProfile() })}>
@@ -82,7 +82,7 @@ export default function Profile({ handleLogout, handleUpdateUser }) {
       }</div>
       <div className="profile__button-box">
         <button type="submit" className={
-          (isValid && activeStyleValidateBtn) ? (
+          (isValid && activeStyleValidateButton) ? (
             'profile__button profile__button_active'
           ) : (
             'profile__button profile__button_unactive'

@@ -14,12 +14,24 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { NAVIGATION_DELAY } from "../../utils/utils";
 import { mainApi } from "../../utils/MainApi";
+import { api } from "../../utils/MoviesApi";
 
 
 function App() {
+  const [movies, setMovies] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const history = useNavigate()
+
+  useEffect(() => {
+    api.getMovies().then((inittialMovies) => {
+      // console.log(inittialMovies)
+      setLoggedIn(true)
+      setMovies(inittialMovies)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
 
   useEffect(() => {
     mainApi
@@ -114,20 +126,20 @@ function App() {
             <Route
               path="/movies"
               element={
-                <>
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <SearchForm />
-                  <MoviesCardList isSavedMovies={false} />
+                  <MoviesCardList isSavedMovies={false} movies={movies} />
                   {/* <Preloader /> */}
-                </>
+                </ProtectedRoute>
               }
             />
             <Route
               path="/saved-movies"
               element={
-                <>
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <SearchForm />
                   <MoviesCardList isSavedMovies={true} />
-                </>
+                </ProtectedRoute>
               }
             />
             <Route

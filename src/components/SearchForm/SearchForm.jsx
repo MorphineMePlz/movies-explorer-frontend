@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useForm } from 'react-hook-form'
+
 
 import Container from "../Container/Container";
 
@@ -6,35 +8,68 @@ import "./SearchForm.css";
 import "./SearchCheckbox.css";
 
 export default function SearchForm() {
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
   const [isShort, setShort] = useState(false);
 
-  const handleChange = (e) => {
-    setSearchValue(e.target.value);
-  };
+  // const handleChange = (e) => {
+  //   setSearchValue(e.target.value);
+  // };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   const obj = {
+  //     movie: searchValue,
+  //     isShort
+  //   };
+
+  //   console.log(obj);
+  // };
+
+  const {
+    register,
+    watch,
+    formState: {
+      errors,
+    },
+    handleSubmit,
+  } = useForm({
+    mode: 'onBlur',
+  });
+
+  const search = watch('search', '')
+
+  const handleSubmitSearch = (e) => {
     e.preventDefault();
-
+    // searchMovies(search)
     const obj = {
-      movie: searchValue,
+      movie: search,
       isShort
     };
 
     console.log(obj);
-  };
+  }
+
 
   return (
     <Container>
-      <form className="search" onSubmit={handleSubmit}>
+      <form className="search" onSubmit={handleSubmit(
+        handleSubmitSearch)}>
         <div className="search__box">
           <input
             type="text"
-            value={searchValue}
-            onChange={handleChange}
+            // value={searchValue}
+            // onChange={handleChange}
             className="search__input"
             placeholder='Фильмы'
-            required
+            {...register('search', {
+              required: 'Нужно ввести ключевое слово',
+              maxLength: {
+                value: 40,
+                message: 'максимум 40 символов'
+              },
+            })}
+            value={search}
           />
           <button type="submit" className="search__submit" />
         </div>
