@@ -1,8 +1,7 @@
-export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "http://localhost:1234";
 
 class MainApi {
     constructor(setting) {
-        this._address = setting.baseUrl;
         this._headers = setting.headers;
     }
 
@@ -14,7 +13,7 @@ class MainApi {
     }
 
     signUp({ name, email, password }) {
-        return fetch(`${this._address}/signup`, {
+        return fetch(`${BASE_URL}/signup`, {
             method: "POST",
             credentials: 'include',
             mode: "cors",
@@ -28,7 +27,7 @@ class MainApi {
     }
 
     signIn({ email, password }) {
-        return fetch(`${this._address}/signin`, {
+        return fetch(`${BASE_URL}/signin`, {
             method: "POST",
             credentials: 'include',
             mode: "cors",
@@ -56,14 +55,14 @@ class MainApi {
     }
 
     getUserInformation() {
-        return fetch(`${this._address}/users/me`, {
+        return fetch(`${BASE_URL}/users/me`, {
             credentials: 'include',
             headers: this._headers,
         }).then((res) => this.handleResponse(res));
     }
 
     editUserInformation(name, email) {
-        return fetch(`${this._address}/users/me`, {
+        return fetch(`${BASE_URL}/users/me`, {
             method: "PATCH",
             credentials: 'include',
             headers: this._headers,
@@ -74,24 +73,39 @@ class MainApi {
         }).then((res) => this.handleResponse(res));
     }
 
-    createMovie(obj) {
-        return fetch(`${this._address}/movies`, {
-            method: "POST",
+    createMovies(data) {
+        return fetch(`${BASE_URL}/movies`, {
+            method: 'POST',
             credentials: 'include',
             headers: this._headers,
-            body: JSON.stringify({ ...obj.body }),
-        }).then((res) => this.handleResponse(res));
+            body: JSON.stringify({
+                country: data.country,
+                director: data.director,
+                duration: data.duration,
+                year: data.year,
+                description: data.description,
+                trailerLink: data.trailerLink,
+                image: 'https://api.nomoreparties.co' + data.image.url,
+                thumbnail: 'https://api.nomoreparties.co' + data.image.formats.thumbnail.url,
+                movieId: data.id,
+                nameRU: data.nameRU,
+                nameEN: data.nameEN,
+            })
+        })
+            .then(this._handleResponse)
     }
 
     getSavedMovies() {
-        return fetch(`${this.__address}/movies`, {
-            headers: this._headers
+        return fetch(`${BASE_URL}/movies`, {
+            headers: this._headers,
+            credentials: 'include',
+
         })
             .then((res) => this.handleResponse(res));
     }
 
     deleteMovie(data) {
-        return fetch(`${this._address}/movies/${data}`, {
+        return fetch(`${BASE_URL}/movies/${data}`, {
             method: "DELETE",
             credentials: 'include',
             headers: this._headers,

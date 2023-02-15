@@ -1,5 +1,8 @@
 import { useState } from "react";
 import './MoviesCard.css'
+// import { CurrentUserContext } from "../../context/CurrentUserContext";
+// import { useContext } from "react";
+
 
 const toHoursAndMinutes = (totalMinutes) => {
     const hours = Math.floor(totalMinutes / 60);
@@ -7,22 +10,15 @@ const toHoursAndMinutes = (totalMinutes) => {
     return `${hours}ч${minutes > 0 ? ` ${minutes}м` : ""}`;
 }
 
-export default function MoviesCard({ data, isSavedMovies }) {
-    console.log(data)
-    const { nameRU, duration, image, isSaved } = data;
-    const [saved, setSaved] = useState(isSaved);
-
-    const handleSaveMovie = (nameRU) => {
-        setSaved(!saved);
-        console.log(nameRU)
-    }
-
+export default function MoviesCard({ data, isSavedMovies, onMovieLike }) {
+    const { nameRU, duration, image, trailerLink } = data;
+    const [saved, setSaved] = useState(false);
     const handleDeleteMovie = (nameRU) => {
         console.log("delete", nameRU)
     }
 
 
-    return <li className='card'>
+    return (<li className='card'>
         <div className='card__box'>
             <span>
                 <h3 className='card__title'>{nameRU}</h3>
@@ -36,11 +32,10 @@ export default function MoviesCard({ data, isSavedMovies }) {
                 /> :
                 <button type="button"
                     className={`card__button ${saved ? "card__button_saved" : ""}`}
-                    onClick={() => handleSaveMovie(nameRU)}
+                    onClick={() => onMovieLike(data)}
                 />
-
             }
         </div>
-        <img src={"https://api.nomoreparties.co/" + image.url} alt={nameRU} className="card__image" />
-    </li>
+        <a href={trailerLink} target="_blank" rel="noreferrer"><img src={isSavedMovies ? image : "https://api.nomoreparties.co/" + image.url} alt={nameRU} className="card__image" /></a>
+    </li>)
 }

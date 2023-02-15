@@ -21,31 +21,46 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [savedMovies, setSavedMovies] = useState([])
   const history = useNavigate()
 
   useEffect(() => {
+    mainApi
+      .checkTokenValidity()
+      .then((data) => {
+        setLoggedIn(true)
+        setCurrentUser(data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [isLoggedIn])
+
+  useEffect(() => {
+    if (isLoggedIn && currentUser) {
+      mainApi
+        .getSavedMovies()
+        .then(data => {
+          const moviesList = data.filter(m => m.owner === currentUser._id)
+          setSavedMovies(moviesList)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [currentUser, isLoggedIn])
+
+
+  useEffect(() => {
     api.getMovies().then((inittialMovies) => {
-      // console.log(inittialMovies)
-      setLoggedIn(true)
       setMovies(inittialMovies)
     }).catch((err) => {
       console.log(err)
     })
   }, [])
 
-  useEffect(() => {
-    mainApi
-      .checkTokenValidity()
-      .then((data) => {
-        if (data) {
-          setLoggedIn(true)
-          setCurrentUser(data)
-        }
-      })
-      .catch((err) => {
-        console.log("checkToken", err)
-      })
-  }, [isLoggedIn])
+
+  //Рега
 
   const handleRegestration = ({ name, email, password }) => {
     mainApi
@@ -62,6 +77,8 @@ function App() {
       });
   };
 
+  //Вход
+
   const handleLogin = ({ email, password }) => {
     mainApi
       .signIn({ email, password })
@@ -74,6 +91,8 @@ function App() {
       });
   };
 
+  //Выход
+
   const handleLogout = () => {
     mainApi
       .logout()
@@ -85,6 +104,8 @@ function App() {
       })
   };
 
+  //Обновление информации о пользователе
+
   const handleUpdateUser = ({ name, email }) => {
     mainApi
       .editUserInformation(name, email)
@@ -95,6 +116,35 @@ function App() {
         console.log(err)
       })
   }
+
+  //Добавление фильма в избранные
+
+  const handleSaveMovie = (movie) => {
+    mainApi
+      .createMovies(movie)
+      .then((newMovie) => setSavedMovies([newMovie, ...savedMovies])
+      )
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //Удаление фильма
+
+  const handleDeleteMovie = (movie) => {
+    const savedMovie = savedMovies.find((item) => item.movieId === movie.id || item.movieId === movie.movieId)
+    mainApi
+      .deleteMovie(savedMovie._id)
+      .then(() => {
+        setSavedMovies((state) => state.filter((item) => item._id !== savedMovie._id))
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }
+
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -128,7 +178,9 @@ function App() {
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <SearchForm />
-                  <MoviesCardList isSavedMovies={false} movies={movies} />
+                  <MoviesCardList isSavedMovies={false} movies={movies}
+                    onMovieLike={handleSaveMovie}
+                    onMovieDelete={handleDeleteMovie} />
                   {/* <Preloader /> */}
                 </ProtectedRoute>
               }
@@ -138,7 +190,7 @@ function App() {
               element={
                 <ProtectedRoute isLoggedIn={isLoggedIn}>
                   <SearchForm />
-                  <MoviesCardList isSavedMovies={true} />
+                  <MoviesCardList isSavedMovies={true} movies={savedMovies} />
                 </ProtectedRoute>
               }
             />

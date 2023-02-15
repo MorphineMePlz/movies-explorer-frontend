@@ -53,8 +53,7 @@ export default function SearchForm() {
 
   return (
     <Container>
-      <form className="search" onSubmit={handleSubmit(
-        handleSubmitSearch)}>
+      <form className="search" onSubmit={handleSubmit(handleSubmitSearch)}>
         <div className="search__box">
           <input
             type="text"
