@@ -104,11 +104,14 @@ class MainApi {
             .then((res) => this.handleResponse(res));
     }
 
-    deleteMovie(data) {
-        return fetch(`${BASE_URL}/movies/${data}`, {
+    deleteMovie(movieId) {
+        return fetch(`${BASE_URL}/movies/${movieId}`, {
             method: "DELETE",
             credentials: 'include',
             headers: this._headers,
+            params: {
+                movieId
+            }
         }).then((res) => this.handleResponse(res));
     }
 }

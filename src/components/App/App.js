@@ -14,50 +14,42 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { NAVIGATION_DELAY } from "../../utils/utils";
 import { mainApi } from "../../utils/MainApi";
-import { api } from "../../utils/MoviesApi";
 
 
 function App() {
-  const [movies, setMovies] = useState([]);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const [savedMovies, setSavedMovies] = useState([])
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [isUserLoaded, setUserLoaded] = useState(false);
   const history = useNavigate()
+
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     mainApi
+  //       .getUserInfo()
+  //       .then((data) => {
+  //         setLoggedIn(true)
+  //         setCurrentUser(data)
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //       })
+  //   }
+  // }, [isLoggedIn])
 
   useEffect(() => {
     mainApi
       .checkTokenValidity()
       .then((data) => {
-        setLoggedIn(true)
+        setLoggedIn(true);
         setCurrentUser(data)
       })
       .catch((err) => {
         console.log(err)
+      }).finally(() => {
+        setUserLoaded(true);
       })
   }, [isLoggedIn])
-
-  useEffect(() => {
-    if (isLoggedIn && currentUser) {
-      mainApi
-        .getSavedMovies()
-        .then(data => {
-          const moviesList = data.filter(m => m.owner === currentUser._id)
-          setSavedMovies(moviesList)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-  }, [currentUser, isLoggedIn])
-
-
-  useEffect(() => {
-    api.getMovies().then((inittialMovies) => {
-      setMovies(inittialMovies)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }, [])
 
 
   //Рега
@@ -85,6 +77,7 @@ function App() {
       .then(() => {
         setLoggedIn(true);
         history('/movies')
+
       })
       .catch((err) => {
         console.log(err)
@@ -98,7 +91,12 @@ function App() {
       .logout()
       .then(() => {
         setLoggedIn(false);
-        history("/signin");
+        history("/");
+        // localStorage.removeItem(`${currentUser.email} - movies`)
+        // localStorage.removeItem(`${currentUser.email} - shortMovies`)
+        // localStorage.removeItem(`${currentUser.email} - moviesSearch`)
+        // localStorage.removeItem(`${currentUser.email} - shortSavedMovies`)
+        // localStorage.removeItem(`${currentUser.email} - allMovies`)
       }).catch((err) => {
         console.log(err)
       })
@@ -131,56 +129,46 @@ function App() {
 
   //Удаление фильма
 
-  const handleDeleteMovie = (movie) => {
-    const savedMovie = savedMovies.find((item) => item.movieId === movie.id || item.movieId === movie.movieId)
-    mainApi
-      .deleteMovie(savedMovie._id)
-      .then(() => {
-        setSavedMovies((state) => state.filter((item) => item._id !== savedMovie._id))
-      })
-      .catch((err) => {
-        console.log(err)
-      });
-  }
 
-
-
+  // console.log(movies)
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <PageWrapper
           isLoggedIn={isLoggedIn}
-          handleLogin={() => setLoggedIn(true)}
           handleLogout={handleLogout}
         >
           <Routes>
             <Route
               path="/signup"
               element={
-                <Authorization
-                  onSubmit={handleRegestration}
-                  isLogin={false}
-                />
+                <ProtectedRoute isLoggedIn={isLoggedIn} isLoaded={isUserLoaded}>
+                  <Authorization
+                    isLogin={false}
+                    onSubmit={handleRegestration}
+                  />
+                </ProtectedRoute>
               }
             />
             <Route
               path="/signin"
               element={
-                <Authorization
-                  isLogin={true}
-                  onSubmit={handleLogin}
-                />
+                <ProtectedRoute isLoggedIn={isLoggedIn} isLoaded={isUserLoaded}>
+                  <Authorization
+                    isLogin={true}
+                    onSubmit={handleLogin}
+                  />
+                </ProtectedRoute>
               }
             />
             <Route exact={true} path="/" element={<MainPage />} />
             <Route
               path="/movies"
               element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <ProtectedRoute isLoggedIn={isLoggedIn} isLoaded={isUserLoaded}>
                   <SearchForm />
-                  <MoviesCardList isSavedMovies={false} movies={movies}
-                    onMovieLike={handleSaveMovie}
-                    onMovieDelete={handleDeleteMovie} />
+                  <MoviesCardList isSavedMovies={false}
+                    onMovieLike={handleSaveMovie} />
                   {/* <Preloader /> */}
                 </ProtectedRoute>
               }
@@ -188,16 +176,16 @@ function App() {
             <Route
               path="/saved-movies"
               element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <ProtectedRoute isLoggedIn={isLoggedIn} isLoaded={isUserLoaded}>
                   <SearchForm />
-                  <MoviesCardList isSavedMovies={true} movies={savedMovies} />
+                  <MoviesCardList isSavedMovies={true} />
                 </ProtectedRoute>
               }
             />
             <Route
               path="/profile"
               element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <ProtectedRoute isLoggedIn={isLoggedIn} isLoaded={isUserLoaded}>
                   <Profile handleLogout={handleLogout} handleUpdateUser={handleUpdateUser} />
                 </ProtectedRoute>
               }

@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useLocation } from 'react-router-dom'
+
 import './MoviesCard.css'
 // import { CurrentUserContext } from "../../context/CurrentUserContext";
 // import { useContext } from "react";
@@ -10,13 +12,12 @@ const toHoursAndMinutes = (totalMinutes) => {
     return `${hours}ч${minutes > 0 ? ` ${minutes}м` : ""}`;
 }
 
-export default function MoviesCard({ data, isSavedMovies, onMovieLike }) {
-    const { nameRU, duration, image, trailerLink } = data;
-    const [saved, setSaved] = useState(false);
-    const handleDeleteMovie = (nameRU) => {
-        console.log("delete", nameRU)
-    }
+export default function MoviesCard({ movie, isSavedMovies, onMovieLike, onMovieDelete, savedMovieData }) {
+    const location = useLocation()
+    const { nameRU, duration, image, trailerLink } = movie;
+    const [isAdded, setIsAdded] = useState(Boolean(savedMovieData));
 
+    const savedMovieId = isSavedMovies ? movie._id : savedMovieData ? savedMovieData._id : null;
 
     return (<li className='card'>
         <div className='card__box'>
@@ -28,14 +29,26 @@ export default function MoviesCard({ data, isSavedMovies, onMovieLike }) {
             {isSavedMovies ?
                 <button type="button"
                     className={`card__button card__button_delete`}
-                    onClick={() => handleDeleteMovie(nameRU)}
+                    onClick={() => savedMovieId && onMovieDelete(savedMovieId)}
                 /> :
                 <button type="button"
-                    className={`card__button ${saved ? "card__button_saved" : ""}`}
-                    onClick={() => onMovieLike(data)}
+                    className={`card__button ${isAdded ? "card__button_saved" : ""}`}
+                    onClick={() => {
+                        if (isAdded) {
+                            onMovieDelete(savedMovieId)
+                            setIsAdded(false)
+                        } else {
+                            onMovieLike(movie);
+                            setIsAdded(true);
+                        }
+                    }}
                 />
             }
         </div>
-        <a href={trailerLink} target="_blank" rel="noreferrer"><img src={isSavedMovies ? image : "https://api.nomoreparties.co/" + image.url} alt={nameRU} className="card__image" /></a>
+        <a href={trailerLink} target="_blank" rel="noreferrer">
+            <img src={location.pathname === '/movies' ? (`https://api.nomoreparties.co/${image.url}`) : image}
+                alt={nameRU} className="card__image"
+            />
+        </a>
     </li>)
 }

@@ -1,30 +1,14 @@
 import { useState } from "react";
 import { useForm } from 'react-hook-form'
 
-
 import Container from "../Container/Container";
 
 import "./SearchForm.css";
 import "./SearchCheckbox.css";
 
 export default function SearchForm() {
-  // const [searchValue, setSearchValue] = useState("");
   const [isShort, setShort] = useState(false);
 
-  // const handleChange = (e) => {
-  //   setSearchValue(e.target.value);
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const obj = {
-  //     movie: searchValue,
-  //     isShort
-  //   };
-
-  //   console.log(obj);
-  // };
 
   const {
     register,
@@ -39,17 +23,14 @@ export default function SearchForm() {
 
   const search = watch('search', '')
 
-  const handleSubmitSearch = (e) => {
-    e.preventDefault();
-    // searchMovies(search)
+  const handleSubmitSearch = () => {
     const obj = {
-      movie: search,
+      search,
       isShort
     };
-
-    console.log(obj);
+    localStorage.setItem("settings", JSON.stringify(obj))
+    console.log(search)
   }
-
 
   return (
     <Container>
@@ -57,8 +38,6 @@ export default function SearchForm() {
         <div className="search__box">
           <input
             type="text"
-            // value={searchValue}
-            // onChange={handleChange}
             className="search__input"
             placeholder='Фильмы'
             {...register('search', {
@@ -68,8 +47,11 @@ export default function SearchForm() {
                 message: 'максимум 40 символов'
               },
             })}
-            value={search}
+            value={search == null ? '' : search}
           />
+          <div className='search-form__input-error'>{
+            errors?.search && <span className='search-form__input-error-text'>{errors?.search?.message || 'Что-то пошло не так...'}</span>
+          }</div>
           <button type="submit" className="search__submit" />
         </div>
         <div className="search__checkbox">
