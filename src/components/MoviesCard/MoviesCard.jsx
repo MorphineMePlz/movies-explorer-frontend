@@ -8,7 +8,14 @@ const toHoursAndMinutes = (totalMinutes) => {
     return `${hours}ч${minutes > 0 ? ` ${minutes}м` : ""}`;
 }
 
-export default function MoviesCard({ movie, isSavedMovies, onMovieLike, onMovieDelete, savedMovieData }) {
+export default function MoviesCard(
+    {
+        movie,
+        isSavedMovies,
+        onMovieLike,
+        onMovieDelete,
+        savedMovieData
+    }) {
     const { nameRU, duration, image, trailerLink } = movie;
     const [isAdded, setIsAdded] = useState(Boolean(savedMovieData));
 
@@ -16,7 +23,7 @@ export default function MoviesCard({ movie, isSavedMovies, onMovieLike, onMovieD
 
     return (<li className='card'>
         <div className='card__box'>
-            <span>
+            <span className='card__text-box'>
                 <h3 className='card__title'>{nameRU}</h3>
                 <p className='card__subtitle'>{toHoursAndMinutes(duration)
                 }</p>

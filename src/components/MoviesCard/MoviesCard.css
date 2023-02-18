@@ -17,11 +17,18 @@
   margin: 14px;
 }
 
+.card__text-box {
+  max-width: 80%;
+}
+
 .card__title {
   font-weight: 500;
   font-size: 15px;
   line-height: 18px;
   margin: 0 0 9px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .card__button {
@@ -61,6 +68,7 @@
 
 .card__image {
   width: 100%;
-  height: 203px;
+  height: 100%;
+  max-height: 203px;
   object-fit: cover;
 }

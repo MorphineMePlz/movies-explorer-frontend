@@ -81,6 +81,9 @@ function App() {
       .logout()
       .then(() => {
         setLoggedIn(false);
+        localStorage.removeItem("movies");
+        localStorage.removeItem("settings");
+        localStorage.removeItem("savedMovies");
         history("/");
       }).catch((err) => {
         console.log(err)
