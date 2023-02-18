@@ -1,10 +1,6 @@
 import { useState } from "react";
-import { useLocation } from 'react-router-dom'
 
 import './MoviesCard.css'
-// import { CurrentUserContext } from "../../context/CurrentUserContext";
-// import { useContext } from "react";
-
 
 const toHoursAndMinutes = (totalMinutes) => {
     const hours = Math.floor(totalMinutes / 60);
@@ -13,7 +9,6 @@ const toHoursAndMinutes = (totalMinutes) => {
 }
 
 export default function MoviesCard({ movie, isSavedMovies, onMovieLike, onMovieDelete, savedMovieData }) {
-    const location = useLocation()
     const { nameRU, duration, image, trailerLink } = movie;
     const [isAdded, setIsAdded] = useState(Boolean(savedMovieData));
 
@@ -46,7 +41,7 @@ export default function MoviesCard({ movie, isSavedMovies, onMovieLike, onMovieD
             }
         </div>
         <a href={trailerLink} target="_blank" rel="noreferrer">
-            <img src={location.pathname === '/movies' ? (`https://api.nomoreparties.co/${image.url}`) : image}
+            <img src={isSavedMovies ? image : `https://api.nomoreparties.co/${image.url}`}
                 alt={nameRU} className="card__image"
             />
         </a>

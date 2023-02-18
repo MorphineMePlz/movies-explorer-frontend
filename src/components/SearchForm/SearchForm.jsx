@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form'
 
 import Container from "../Container/Container";
@@ -6,9 +6,19 @@ import Container from "../Container/Container";
 import "./SearchForm.css";
 import "./SearchCheckbox.css";
 
-export default function SearchForm() {
-  const [isShort, setShort] = useState(false);
+const SHORT_MOVIE_LENGTH = 40;
 
+export default function SearchForm({ setMovies, initialMovies, isLoading }) {
+
+  const initialSettings =
+    localStorage.getItem("settings") ?
+      JSON.parse(localStorage.getItem("settings")) :
+      {
+        isShort: false,
+        searchValue: ""
+      }
+
+  const [isShort, setShort] = useState(initialSettings?.isShort);
 
   const {
     register,
@@ -21,16 +31,43 @@ export default function SearchForm() {
     mode: 'onBlur',
   });
 
-  const search = watch('search', '')
+  const searchValue = watch('search', initialSettings?.searchValue);
+
+  const filterMoviesByName = () => {
+    let filteredMovies = initialMovies.filter((movie) => movie.nameRU.toLowerCase().includes(searchValue.toLowerCase() || ""));
+
+    if (isShort) {
+      filteredMovies = filterMoviesByLength(filteredMovies);
+    }
+
+    setMovies(filteredMovies);
+  }
+
+  const filterMoviesByLength = (moviesArr = []) => {
+    return moviesArr.filter((movie) => movie.duration <= SHORT_MOVIE_LENGTH);
+  };
 
   const handleSubmitSearch = () => {
-    const obj = {
-      search,
+    const newSettings = {
+      searchValue,
       isShort
     };
-    localStorage.setItem("settings", JSON.stringify(obj))
-    console.log(search)
+
+    filterMoviesByName();
+    localStorage.setItem("settings", JSON.stringify(newSettings));
   }
+
+  useEffect(() => {
+    if (!isLoading) {
+      filterMoviesByName();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (searchValue === "") {
+      setMovies(initialMovies);
+    }
+  }, [searchValue])
 
   return (
     <Container>
@@ -47,7 +84,7 @@ export default function SearchForm() {
                 message: 'максимум 40 символов'
               },
             })}
-            value={search == null ? '' : search}
+            value={searchValue}
           />
           <div className='search-form__input-error'>{
             errors?.search && <span className='search-form__input-error-text'>{errors?.search?.message || 'Что-то пошло не так...'}</span>

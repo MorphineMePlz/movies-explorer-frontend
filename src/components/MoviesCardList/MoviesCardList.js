@@ -1,104 +1,68 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { useLocation } from "react-router-dom";
 
 import Container from '../Container/Container';
 import MoviesCard from '../MoviesCard/MoviesCard'
-import Preloader from "../Preloader/Preloader";
-
-import { api } from "../../utils/MoviesApi";
 
 import "./MoviesCardList.css";
 
-import { mainApi } from "../../utils/MainApi";
 
-
-export default function MoviesCardList({ isSavedMovies, onMovieLike }) {
+export default function MoviesCardList(
+    {
+        onMovieLike,
+        onMovieDelete,
+        handleMovies,
+        handleSavedMovies,
+        savedMovies,
+        movies
+    }
+) {
     const location = useLocation();
-
-    const [movies, setMovies] = useState([]);
-    const [savedMovies, setSavedMovies] = useState([]);
-    const [isLoading, setLoading] = useState(false);
-
-    const handleDeleteMovie = (movieId) => {
-        mainApi
-            .deleteMovie(movieId)
-            .then(() => {
-                const filteredMovies = savedMovies.filter((movie) => movie._id !== movieId)
-                setSavedMovies(filteredMovies)
-            })
-            .catch((err) => {
-                console.log(err)
-            });
-    }
-
-    const handleSavedMovies = () => {
-        setLoading(true)
-        mainApi
-            .getSavedMovies()
-            .then((data) => {
-                setSavedMovies(data);
-            })
-            .catch((err) => {
-                console.log(err)
-            }).finally(() => {
-                setLoading(false);
-            })
-    }
-
-    const handleMovies = () => {
-        setLoading(true);
-        api.getMovies().then((initialMovies) => {
-            setMovies(initialMovies)
-            localStorage.setItem('movies', JSON.stringify(initialMovies))
-        }).catch((err) => {
-            console.log(err)
-        }).finally(() => {
-            setLoading(false);
-        })
-    }
+    const isMoviesRoute = location.pathname === "/movies"
+    const isSavedMovies = useMemo(() =>
+        location.pathname === "/saved-movies",
+        [location.pathname]);
 
     useEffect(() => {
-        if (!localStorage.getItem("movies") || location.pathname === "/movies") {
+        if (!localStorage.getItem("movies") || isMoviesRoute) {
             handleMovies();
         }
 
         handleSavedMovies();
-    }, [isSavedMovies, location.pathname]);
+    }, [location.pathname]);
 
-    const moviesForMapping = isSavedMovies ? savedMovies : movies;
+    const moviesForMapping = useMemo(() =>
+        isSavedMovies ?
+            savedMovies
+            : movies,
+        [isSavedMovies, savedMovies, movies]);
 
     return (
         <Container>
-            {isLoading ?
-                <Preloader style={{ margin: "0 auto" }} />
-                :
-                <ul className='cards'>
-                    {moviesForMapping?.map((movie, i) => {
-                        const savedMovieData = savedMovies.find((m) => m.movieId === movie.id);
+            <ul className='cards'>
+                {moviesForMapping?.length ? moviesForMapping?.map((movie) => {
+                    const savedMovieData = savedMovies.find((m) => m.movieId === movie.id);
+                    return (
+                        <MoviesCard
+                            key={isSavedMovies ? movie.movieId : movie.id}
+                            movie={movie}
+                            onMovieLike={onMovieLike}
+                            isSavedMovies={isSavedMovies}
+                            onMovieDelete={onMovieDelete}
+                            savedMovieData={savedMovieData}
+                        />
+                    )
+                }) : <li className=''>Фильмов нет</li>}
+            </ul>
 
-                        return (
-                            <MoviesCard
-                                key={i}
-                                movie={movie}
-                                onMovieLike={onMovieLike}
-                                isSavedMovies={isSavedMovies}
-                                onMovieDelete={handleDeleteMovie}
-                                savedMovieData={savedMovieData}
-                            />
-                        )
-                    })}
-                </ul>
-            }
-
-            <button
+            {location.pathname === "/movies" ? <button
                 type="button"
                 className='cards__button'
                 onClick={() => null}
             >
                 Еще
-            </button>
+            </button> : ""}
         </Container>
     )
 }
