@@ -1,11 +1,21 @@
 .cards {
+  padding: 0;
   display: grid;
   width: 100%;
+  min-height: 45vh;
+}
+
+.cards_grid {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  padding: 0;
   list-style-type: none;
   margin: 70px 0;
+}
+
+.cards_flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cards__button {
@@ -25,6 +35,15 @@
 
 .cards__button:hover {
   filter: invert();
+}
+
+
+.cards__text {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 @media screen and (max-width: 1280px) {

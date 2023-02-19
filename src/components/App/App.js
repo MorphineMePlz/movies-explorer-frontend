@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import MainPage from "../MainPage/MainPage";
@@ -9,8 +9,8 @@ import Profile from "../Profile/Profile";
 import Authorization from "../Authorization/Authorization";
 import NotFound from "../NotFound/NotFound";
 import LoadingPopup from '../LoadingPopup/LoadingPopup';
+import InfoTooltip from "../InfoTooltip/InfoTooltip"
 
-// import Preloader from "../Preloader/Preloader";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { NAVIGATION_DELAY } from "../../utils/utils";
@@ -19,13 +19,19 @@ import { api } from '../../utils/MoviesApi';
 
 
 function App() {
+  const history = useNavigate();
+
+  const [isTooltipOpen, setTooltipOpen] = useState(false);
+  const [isRequestFailed, setRequestFailed] = useState(false);
+
   const [movies, setMovies] = useState([]);
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
   const [savedMovies, setSavedMovies] = useState([]);
-  const [isUserLoaded, setUserLoaded] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [searchValue, setSearchValue] = useState("");
+
+  const [isLoggedIn, setLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const history = useNavigate()
+  const [isUserLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
     mainApi
@@ -39,27 +45,26 @@ function App() {
       }).finally(() => {
         setUserLoaded(true);
       })
-  }, [isLoggedIn])
-
-
-  //Рега
+  }, [])
 
   const handleRegestration = ({ name, email, password }) => {
     mainApi
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
+          setRequestFailed(false);
+          setTooltipOpen(true);
           setTimeout(() => {
             history("/signin");
           }, NAVIGATION_DELAY);
         }
       })
       .catch((err) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(err)
       });
   };
-
-  //Вход
 
   const handleLogin = ({ email, password }) => {
     mainApi
@@ -70,11 +75,11 @@ function App() {
 
       })
       .catch((err) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(err)
       });
   };
-
-  //Выход
 
   const handleLogout = () => {
     mainApi
@@ -86,11 +91,11 @@ function App() {
         localStorage.removeItem("savedMovies");
         history("/");
       }).catch((err) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(err)
       })
   };
-
-  //Обновление информации о пользователе
 
   const handleUpdateUser = ({ name, email }) => {
     mainApi
@@ -99,11 +104,11 @@ function App() {
         setCurrentUser(newUserData);
       })
       .catch((err) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(err)
       })
   }
-
-  //Добавление фильма в избранные
 
   const handleSaveMovie = (movie) => {
     mainApi
@@ -114,11 +119,11 @@ function App() {
       }
       )
       .catch((error) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(error);
       });
   }
-
-  //Удаление фильма
 
   const handleDeleteMovie = (movieId) => {
     mainApi
@@ -129,6 +134,8 @@ function App() {
         handleSavedMovies();
       })
       .catch((err) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(err)
       });
   }
@@ -142,6 +149,8 @@ function App() {
         localStorage.setItem('savedMovies', JSON.stringify(data));
       })
       .catch((err) => {
+        setRequestFailed(true);
+        setTooltipOpen(true);
         console.log(err)
       }).finally(() => {
         setLoading(false);
@@ -149,20 +158,32 @@ function App() {
   }
 
   const handleMovies = () => {
-    if (localStorage.getItem("movies")) {
-      setMovies(JSON.parse(localStorage.getItem("movies")))
-    } else {
-      setLoading(true);
-      api.getMovies().then((initialMovies) => {
-        setMovies(initialMovies);
-        localStorage.setItem('movies', JSON.stringify(initialMovies));
-      }).catch((err) => {
-        console.log(err)
-      }).finally(() => {
-        setLoading(false);
-      })
+    // считаю, что при первой загрузке странице лучше отображать все фильмы, иначе не понятно, какие вообще фильмы можно искать
+    // если удалить условие ниже - будет на много более юзабельно
+    if (searchValue === "") {
+      setMovies([]);
+      return;
     }
+
+    if (localStorage.getItem("movies") && searchValue !== "") {
+      setMovies(JSON.parse(localStorage.getItem("movies")));
+      return;
+    }
+
+    setLoading(true);
+    api.getMovies().then((initialMovies) => {
+      setMovies(initialMovies);
+      localStorage.setItem('movies', JSON.stringify(initialMovies));
+    }).catch((err) => {
+      setRequestFailed(true);
+      setTooltipOpen(true);
+      console.log(err)
+    }).finally(() => {
+      setLoading(false);
+    })
   }
+
+  const getSearchValue = useCallback((v) => setSearchValue(v), [searchValue]);
 
   const initialMovies = JSON.parse(localStorage.getItem("movies")) || [];
   const initialSavedMovies = JSON.parse(localStorage.getItem("savedMovies")) || [];
@@ -190,7 +211,8 @@ function App() {
               element={
                 <ProtectedRoute
                   isLoggedIn={isLoggedIn}
-                  isLoaded={isUserLoaded}>
+                  isLoaded={isUserLoaded}
+                >
                   <Authorization
                     isLogin={false}
                     onSubmit={handleRegestration}
@@ -203,7 +225,8 @@ function App() {
               element={
                 <ProtectedRoute
                   isLoggedIn={isLoggedIn}
-                  isLoaded={isUserLoaded}>
+                  isLoaded={isUserLoaded}
+                >
                   <Authorization
                     isLogin={true}
                     onSubmit={handleLogin}
@@ -217,12 +240,14 @@ function App() {
               element={
                 <ProtectedRoute
                   isLoggedIn={isLoggedIn}
-                  isLoaded={isUserLoaded}>
+                  isLoaded={isUserLoaded}
+                >
                   <SearchForm
                     movies={movies}
                     setMovies={setMovies}
                     isLoading={isLoading}
                     initialMovies={initialMovies}
+                    getSearchValue={getSearchValue}
                   />
                   {MoviesListWithProps}
                 </ProtectedRoute>
@@ -233,12 +258,14 @@ function App() {
               element={
                 <ProtectedRoute
                   isLoggedIn={isLoggedIn}
-                  isLoaded={isUserLoaded} >
+                  isLoaded={isUserLoaded}
+                >
                   <SearchForm
                     movies={savedMovies}
                     setMovies={setSavedMovies}
                     isLoading={isLoading}
                     initialMovies={initialSavedMovies}
+                    getSearchValue={getSearchValue}
                   />
                   {MoviesListWithProps}
                 </ProtectedRoute>
@@ -259,6 +286,11 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           <LoadingPopup isOpen={isLoading || !isUserLoaded} />
+          <InfoTooltip
+            isOpen={isTooltipOpen}
+            onClose={() => setTooltipOpen(false)}
+            isRequestFailed={isRequestFailed}
+          />
         </PageWrapper>
       </div>
     </CurrentUserContext.Provider>

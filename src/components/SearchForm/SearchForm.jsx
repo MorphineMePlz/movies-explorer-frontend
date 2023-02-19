@@ -8,7 +8,7 @@ import "./SearchCheckbox.css";
 
 const SHORT_MOVIE_LENGTH = 40;
 
-export default function SearchForm({ setMovies, initialMovies, isLoading }) {
+export default function SearchForm({ setMovies, initialMovies, isLoading, getSearchValue }) {
 
   const initialSettings =
     localStorage.getItem("settings") ?
@@ -58,16 +58,14 @@ export default function SearchForm({ setMovies, initialMovies, isLoading }) {
   }
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && searchValue !== "") {
       filterMoviesByName();
     }
   }, [isLoading]);
 
   useEffect(() => {
-    if (searchValue === "") {
-      setMovies(initialMovies);
-    }
-  }, [searchValue])
+    getSearchValue(searchValue)
+  }, [searchValue]);
 
   return (
     <Container>
@@ -78,7 +76,7 @@ export default function SearchForm({ setMovies, initialMovies, isLoading }) {
             className="search__input"
             placeholder='Фильмы'
             {...register('search', {
-              required: 'Нужно ввести ключевое слово',
+              required: "Поле не должно быть пустым",
               maxLength: {
                 value: 40,
                 message: 'максимум 40 символов'

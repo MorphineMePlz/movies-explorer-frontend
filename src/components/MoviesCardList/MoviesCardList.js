@@ -19,7 +19,9 @@ export default function MoviesCardList(
     }
 ) {
     const location = useLocation();
-    const isMoviesRoute = location.pathname === "/movies"
+    const isMoviesPath = useMemo(() =>
+        location.pathname === "/movies",
+        [location.pathname]);
     const isSavedMovies = useMemo(() =>
         location.pathname === "/saved-movies",
         [location.pathname]);
@@ -27,7 +29,7 @@ export default function MoviesCardList(
     const windowWidth = useMemo(() => window.innerWidth, [window.innerWidth]);
 
     useEffect(() => {
-        if (!localStorage.getItem("movies") || isMoviesRoute) {
+        if (!localStorage.getItem("movies") || isMoviesPath) {
             handleMovies();
         }
 
@@ -61,7 +63,6 @@ export default function MoviesCardList(
 
     const handleSliceMovies = () => {
         setSliceAmount((prevState) => {
-            console.log(prevState + amountOfCards.additional)
             return prevState + amountOfCards.additional
         });
     }
@@ -78,7 +79,7 @@ export default function MoviesCardList(
 
     return (
         <Container>
-            <ul className='cards'>
+            <ul className={`cards ${moviesForMapping?.length ? "cards_grid" : "cards_flex"}`}>
                 {moviesForMapping?.length ? moviesForMapping
                     .slice(0, sliceAmount)
                     .map((movie) => {
@@ -93,9 +94,8 @@ export default function MoviesCardList(
                                 savedMovieData={savedMovieData}
                             />
                         )
-                    }) : <li className=''>Фильмов нет</li>}
+                    }) : <li className='cards__text'>Вы еще не добавили фильмы</li>}
             </ul>
-
             {!(moviesForMapping.length <= 12 || sliceAmount >= moviesForMapping.length) && <button
                 type="button"
                 className='cards__button'
