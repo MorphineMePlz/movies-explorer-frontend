@@ -6,6 +6,7 @@
   justify-content: space-between;
   flex-direction: column;
   margin: 0 auto;
+  padding: 0;
 }
 
 .profile__heading {
@@ -14,6 +15,7 @@
   font-size: 24px;
   line-height: 29px;
   text-align: center;
+
 }
 
 .profile__box {
@@ -26,6 +28,7 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
+
 }
 
 .profile__table-line {
@@ -34,6 +37,8 @@
   justify-content: space-between;
   width: 100%;
   padding: 16px 0 0 0;
+  position: relative;
+
 }
 
 .profile__table-line:first-of-type {
@@ -70,18 +75,70 @@
   font-size: 13px;
   line-height: 16px;
   border: none;
-  background-color: unset;
   padding: 0;
   cursor: pointer;
   transition: 0.2s;
+  background-color: unset;
+
 }
 
 .profile__button:hover {
   text-decoration: underline;
 }
 
+.profile__button_active {
+  color: black;
+}
+
+.profile__button_unactive {
+  cursor: not-allowed;
+  background-color: unset;
+
+}
+
+.profile__button_unactive:hover {
+  text-decoration: none;
+}
+
+.profile__input_error {
+  width: 370px;
+  text-align: end;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #EE3465;
+}
+
+.profile__input-error {
+  position: absolute;
+  margin-top: 12px;
+  /* left: 0;
+  bottom: 100%; */
+}
+
+.profile__input-error-text {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #EE3465;
+}
+
+.profile__input-error-email {
+  position: absolute;
+  top: 60%;
+}
+
+.profile__input-error-text-email {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #EE3465;
+}
+
 .profile__button_logout {
-  color: #ff4062;
   margin-top: 16px;
 }
 

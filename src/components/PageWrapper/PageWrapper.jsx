@@ -10,7 +10,7 @@ import "./PageWrapper.css";
 const WRAPPER_ROUTES = ["/", "/saved-movies", "/profile", "/movies"];
 const NO_FOOTER_ROUTES = ["/profile"];
 
-export default function PageWrapper({ isLoggedIn, handleLogin, children }) {
+export default function PageWrapper({ isLoggedIn, children }) {
   const [isBurgerMenuOpen, setisBurgerMenuOpen] = useState(false);
 
   const location = useLocation();
@@ -35,7 +35,6 @@ export default function PageWrapper({ isLoggedIn, handleLogin, children }) {
         <div className="page-wrapper">
           <Header
             isLoggedIn={isLoggedIn}
-            handleLogin={handleLogin}
             handleBurgerMenu={handleBurgerMenu}
             isBurgerMenuOpen={isBurgerMenuOpen}
           />

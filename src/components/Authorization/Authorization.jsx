@@ -1,25 +1,37 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/headerLogo.svg";
-import { INITIAL_VALUES, REGISTRATION_TEXTS, LOGIN_TEXTS } from "../../utils/utils";
+import { useForm } from 'react-hook-form'
+import { REGISTRATION_TEXTS, LOGIN_TEXTS } from "../../utils/utils";
 
 import "./Authorization.css";
 
-
-
 export default function Authorization({ isLogin, onSubmit }) {
   const texts = isLogin ? LOGIN_TEXTS : REGISTRATION_TEXTS;
-  const values = isLogin ? INITIAL_VALUES : { ...INITIAL_VALUES, name: "" };
+  const {
+    register,
+    watch,
+    formState: {
+      errors,
+      isValid,
+    },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: ''
+    },
+    mode: 'onChange'
+  });
 
-  const [inputValues, setInputValues] = useState(values);
 
-  const handleChange = (e) => {
-    setInputValues({ ...inputValues, [e.target.name]: e.target.value });
-  };
+  const name = watch('name')
+  const email = watch('email')
+  const password = watch('password')
 
-  useEffect(() => {
-    setInputValues(values);
-  }, [isLogin]);
+  const handleOnSubmit = () => {
+    onSubmit({ name, email, password })
+  }
 
   return (
     <div className="wrapper authorization">
@@ -27,56 +39,85 @@ export default function Authorization({ isLogin, onSubmit }) {
       <h1 className="authorization__heading">{texts.heading}</h1>
       <form
         className="authorization__form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
+        onSubmit={handleSubmit(handleOnSubmit)}
       >
         <div className="authorization__box">
           {!isLogin && (
             <div className="authorization__field">
               <p className="authorization__placeholder">Имя</p>
               <input
-                required
                 type="text"
-                name="name"
-                value={inputValues.name}
-                onChange={handleChange}
+                value={name}
                 className="authorization__input"
-              />
+                {...register('name', {
+                  required: 'Обязательное поле',
+                  minLength: {
+                    value: 2,
+                    message: 'минимум 2 символа'
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: 'максимум 20 символов'
+                  },
+                  pattern: {
+                    value: /^[A-Za-zА-Яа-яЁё /h -]+$/,
+                    message: 'Имя должно содержать только латиницу, кириллицу, пробел или дефис'
+                  }
+                })} />
             </div>
           )}
-
+          <div className='authorization__input-error'>{
+            errors?.name && <span className='authorization__input-error-text'>{errors?.name?.message || 'Что-то пошло не так...'}</span>
+          }</div>
           <div className="authorization__field">
             <p className="authorization__placeholder">E-mail</p>
             <input
               required
               type="email"
-              name="email"
-              value={inputValues.email}
-              onChange={handleChange}
+              value={email}
               className="authorization__input"
+              {...register('email', {
+                required: 'Обязательное поле',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Некорректный емайл'
+                }
+              })}
             />
+            <div className='authorization__input-error'>{errors?.email && <span className='authorization__input-error-text'>{errors?.email?.message || 'Что-то пошло не так...'}</span>}</div>
           </div>
 
           <div className="authorization__field">
             <p className="authorization__placeholder">Пароль</p>
             <input
-              required
               type="password"
-              name="password"
-              value={inputValues.password}
-              onChange={handleChange}
+              value={password}
               className="authorization__input"
+              {...register('password', {
+                required: 'Обязательное поле',
+                minLength: {
+                  value: 4,
+                  message: 'минимум 4 символа'
+                },
+                maxLength: {
+                  value: 30,
+                  message: 'максимум 30 символов'
+                },
+              })}
             />
+            <div className='authorization__input-error'>{errors?.password && <span className='authorization__input-error-text'>{errors?.password?.message || 'Что-то пошло не так...'}</span>}</div>
           </div>
         </div>
-
         <div
           className={`authorization__button-box ${isLogin ? "authorization__button_box_signin" : ""
             }`}
         >
-          <button type="submit" className="authorization__button">
+          <button type="submit" className={
+            isValid ? (
+              'authorization__button authorization__button_active'
+            ) : (
+              'authorization__button authorization__button_unactive'
+            )} disabled={!isValid}>
             {texts.button}
           </button>
           <span className="authorization__subline">

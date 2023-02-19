@@ -50,6 +50,17 @@
   outline: none;
 }
 
+.authorization__input-error {
+  height: 19px;
+}
+
+.authorization__input-error-text {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #EE3465;
+}
+
 .authorization__button-box {
   width: 100%;
   margin-top: 152px;
@@ -64,8 +75,6 @@
 }
 
 .authorization__button {
-  color: white;
-  background: #000000;
   border-radius: 3px;
   padding: 13px 0 15px 0;
   width: 100%;
@@ -81,6 +90,16 @@
 .authorization__button:hover {
   transform: scale(1.03);
   opacity: 0.7;
+}
+
+.authorization__button_active {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.authorization__button_unactive {
+  background: #F8F8F8;
+  color: #C2C2C2;
 }
 
 .authorization__subline {

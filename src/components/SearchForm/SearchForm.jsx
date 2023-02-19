@@ -1,41 +1,92 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from 'react-hook-form'
 
 import Container from "../Container/Container";
 
 import "./SearchForm.css";
 import "./SearchCheckbox.css";
 
-export default function SearchForm() {
-  const [searchValue, setSearchValue] = useState("");
-  const [isShort, setShort] = useState(false);
+const SHORT_MOVIE_LENGTH = 40;
 
-  const handleChange = (e) => {
-    setSearchValue(e.target.value);
+export default function SearchForm({ setMovies, initialMovies, isLoading, getSearchValue }) {
+
+  const initialSettings =
+    localStorage.getItem("settings") ?
+      JSON.parse(localStorage.getItem("settings")) :
+      {
+        isShort: false,
+        searchValue: ""
+      }
+
+  const [isShort, setShort] = useState(initialSettings?.isShort);
+
+  const {
+    register,
+    watch,
+    formState: {
+      errors,
+    },
+    handleSubmit,
+  } = useForm({
+    mode: 'onBlur',
+  });
+
+  const searchValue = watch('search', initialSettings?.searchValue);
+
+  const filterMoviesByName = () => {
+    let filteredMovies = initialMovies.filter((movie) => movie.nameRU.toLowerCase().includes(searchValue.toLowerCase() || ""));
+
+    if (isShort) {
+      filteredMovies = filterMoviesByLength(filteredMovies);
+    }
+
+    setMovies(filteredMovies);
+  }
+
+  const filterMoviesByLength = (moviesArr = []) => {
+    return moviesArr.filter((movie) => movie.duration <= SHORT_MOVIE_LENGTH);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const obj = {
-      movie: searchValue,
+  const handleSubmitSearch = () => {
+    const newSettings = {
+      searchValue,
       isShort
     };
 
-    console.log(obj);
-  };
+    filterMoviesByName();
+    localStorage.setItem("settings", JSON.stringify(newSettings));
+  }
+
+  useEffect(() => {
+    if (!isLoading && searchValue !== "") {
+      filterMoviesByName();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    getSearchValue(searchValue)
+  }, [searchValue]);
 
   return (
     <Container>
-      <form className="search" onSubmit={handleSubmit}>
+      <form className="search" onSubmit={handleSubmit(handleSubmitSearch)}>
         <div className="search__box">
           <input
             type="text"
-            value={searchValue}
-            onChange={handleChange}
             className="search__input"
             placeholder='Фильмы'
-            required
+            {...register('search', {
+              required: "Поле не должно быть пустым",
+              maxLength: {
+                value: 40,
+                message: 'максимум 40 символов'
+              },
+            })}
+            value={searchValue}
           />
+          <div className='search-form__input-error'>{
+            errors?.search && <span className='search-form__input-error-text'>{errors?.search?.message || 'Что-то пошло не так...'}</span>
+          }</div>
           <button type="submit" className="search__submit" />
         </div>
         <div className="search__checkbox">

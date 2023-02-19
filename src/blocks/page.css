@@ -13,6 +13,9 @@
   margin: 0 auto;
   max-width: 1280px;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* height: 100%; */
 }
 
 .page_overflow {
