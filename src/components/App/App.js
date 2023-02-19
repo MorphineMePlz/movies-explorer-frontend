@@ -53,7 +53,6 @@ function App() {
       .then((res) => {
         if (res.statusCode !== 400) {
           setRequestFailed(false);
-          setTooltipOpen(true);
           setTimeout(() => {
             history("/signin");
           }, NAVIGATION_DELAY);
