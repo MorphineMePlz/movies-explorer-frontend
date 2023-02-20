@@ -1,3 +1,5 @@
-[Ссылка на макет](https://disk.yandex.com/d/rofnQzBBYQH0Mw);
-[API](130.193.51.78);
-[Pull reqiest](https://github.com/MorphineMePlz/movies-explorer-frontend/pull/4);
+# Дипломная работа
+
+1.[Ссылка на макет](https://disk.yandex.com/d/rofnQzBBYQH0Mw);
+2.[Ссылка на Pull reqiest](https://github.com/MorphineMePlz/movies-explorer-frontend/pull/4);
+3.[Сcылка на сайт](aziz-movies-diplom.nomoredomains.rocks);
