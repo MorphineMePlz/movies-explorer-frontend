@@ -57,6 +57,7 @@ function App() {
           setTimeout(() => {
             history("/signin");
           }, NAVIGATION_DELAY);
+          setTooltipOpen(false);
         }
       })
       .catch((err) => {
