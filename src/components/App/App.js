@@ -54,7 +54,6 @@ function App() {
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
-          setRequestFailed(false);
           setTimeout(() => {
             history("/signin");
           }, NAVIGATION_DELAY);
