@@ -64,7 +64,10 @@ function App() {
         setRequestFailed(true);
         setTooltipOpen(true);
         console.log(err)
-      });
+      }).finally(() => {
+        setRequestFailed(false);
+        setTooltipOpen(false);
+      })
   };
 
   const handleLogin = ({ email, password }) => {
