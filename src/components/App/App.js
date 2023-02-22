@@ -1,3 +1,5 @@
+//Это для реквеста)
+
 import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
@@ -52,7 +54,6 @@ function App() {
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
-          setRequestFailed(false);
           setTimeout(() => {
             history("/signin");
           }, NAVIGATION_DELAY);
