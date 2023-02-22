@@ -54,7 +54,9 @@ function App() {
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
-          handleLogin({ email, password })
+          setTimeout(() => {
+            history("/signin");
+          }, NAVIGATION_DELAY);
         }
       })
       .catch((err) => {
