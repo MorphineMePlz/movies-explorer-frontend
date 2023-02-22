@@ -54,10 +54,7 @@ function App() {
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
-          setTimeout(() => {
-            history("/signin");
-          }, NAVIGATION_DELAY);
-          setTooltipOpen(false);
+          handleLogin({ email, password })
         }
       })
       .catch((err) => {
