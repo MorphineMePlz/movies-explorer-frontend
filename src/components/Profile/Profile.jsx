@@ -5,6 +5,7 @@ import "./Profile.css";
 
 export default function Profile({ handleLogout, handleUpdateUser }) {
   const currentUser = useContext(CurrentUserContext)
+
   const {
     register,
     watch,
@@ -30,6 +31,7 @@ export default function Profile({ handleLogout, handleUpdateUser }) {
 
   const disableState = (currentUser.name === name && currentUser.email === email)
   const activeButton = (currentUser.name !== name || currentUser.email !== email)
+  // console.log(currentUser.name)
 
   return (
     <form className='profile' onSubmit={handleSubmit(() => { handleSubmitProfile() })}>

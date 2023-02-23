@@ -35,6 +35,22 @@ function App() {
   const [isUserLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
+    if (isLoggedIn) {
+      mainApi
+        .getUserInformation()
+        .then((info) => {
+          console.log(info)
+          setLoggedIn(true)
+          setCurrentUser(info)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [isLoggedIn])
+
+
+  useEffect(() => {
     mainApi
       .checkTokenValidity()
       .then((data) => {
