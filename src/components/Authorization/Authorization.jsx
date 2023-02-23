@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/images/headerLogo.svg";
 import { useForm } from 'react-hook-form'
 import { REGISTRATION_TEXTS, LOGIN_TEXTS } from "../../utils/utils";
@@ -35,7 +35,9 @@ export default function Authorization({ isLogin, onSubmit }) {
 
   return (
     <div className="wrapper authorization">
-      <img src={logo} alt="logo" className="authorization__logo" />
+      <NavLink to="/">
+        <img className="authorization__logo" src={logo} alt="логотип" />
+      </NavLink>
       <h1 className="authorization__heading">{texts.heading}</h1>
       <form
         className="authorization__form"
@@ -53,15 +55,15 @@ export default function Authorization({ isLogin, onSubmit }) {
                   required: 'Обязательное поле',
                   minLength: {
                     value: 2,
-                    message: 'минимум 2 символа'
+                    message: 'вы должны заполнить минимум 2 символа'
                   },
                   maxLength: {
                     value: 20,
-                    message: 'максимум 20 символов'
+                    message: 'вы должны заполнить максимум 20 символов'
                   },
                   pattern: {
                     value: /^[A-Za-zА-Яа-яЁё /h -]+$/,
-                    message: 'Имя должно содержать только латиницу, кириллицу, пробел или дефис'
+                    message: 'Имя не должно содержать цифры'
                   }
                 })} />
             </div>
@@ -97,11 +99,11 @@ export default function Authorization({ isLogin, onSubmit }) {
                 required: 'Обязательное поле',
                 minLength: {
                   value: 4,
-                  message: 'минимум 4 символа'
+                  message: 'вы должны заполнить минимум 4 символа'
                 },
                 maxLength: {
                   value: 30,
-                  message: 'максимум 30 символов'
+                  message: 'вы должны заполнить максимум 30 символов'
                 },
               })}
             />

@@ -15,7 +15,6 @@ import InfoTooltip from "../InfoTooltip/InfoTooltip"
 
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
-import { NAVIGATION_DELAY } from "../../utils/utils";
 import { mainApi } from "../../utils/MainApi";
 import { api } from '../../utils/MoviesApi';
 
@@ -54,18 +53,15 @@ function App() {
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
-          setTimeout(() => {
-            history("/signin");
-          }, NAVIGATION_DELAY);
+          handleLogin({ email, password })
+          setRequestFailed(false);
+          setTooltipOpen(false);
         }
       })
       .catch((err) => {
         setRequestFailed(true);
         setTooltipOpen(true);
         console.log(err)
-      }).finally(() => {
-        setRequestFailed(false);
-        setTooltipOpen(false);
       })
   };
 
@@ -165,6 +161,7 @@ function App() {
     // если удалить условие ниже - будет на много более юзабельно
     if (searchValue === "") {
       setMovies([]);
+
       return;
     }
 

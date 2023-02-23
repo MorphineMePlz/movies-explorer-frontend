@@ -10,6 +10,7 @@ const SHORT_MOVIE_LENGTH = 40;
 
 export default function SearchForm({ setMovies, initialMovies, isLoading, getSearchValue }) {
 
+
   const initialSettings =
     localStorage.getItem("settings") ?
       JSON.parse(localStorage.getItem("settings")) :
@@ -34,6 +35,8 @@ export default function SearchForm({ setMovies, initialMovies, isLoading, getSea
   const searchValue = watch('search', initialSettings?.searchValue);
 
   const filterMoviesByName = () => {
+
+
     let filteredMovies = initialMovies.filter((movie) => movie.nameRU.toLowerCase().includes(searchValue.toLowerCase() || ""));
 
     if (isShort) {
@@ -79,7 +82,7 @@ export default function SearchForm({ setMovies, initialMovies, isLoading, getSea
               required: "Поле не должно быть пустым",
               maxLength: {
                 value: 40,
-                message: 'максимум 40 символов'
+                message: 'вы должны заполнить максимум 40 символов'
               },
             })}
             value={searchValue}
