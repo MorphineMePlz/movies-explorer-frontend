@@ -32,4 +32,4 @@ export const MOCK_DATA = {
     isSaved: false
 }
 
-export const NAVIGATION_DELAY = 2000;
+export const SHORT_MOVIE_LENGTH = 40;

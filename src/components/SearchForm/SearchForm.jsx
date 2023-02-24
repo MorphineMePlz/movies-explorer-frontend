@@ -4,10 +4,11 @@ import { useLocation } from 'react-router-dom';
 
 import Container from "../Container/Container";
 
+
 import "./SearchForm.css";
 import "./SearchCheckbox.css";
+import {SHORT_MOVIE_LENGTH} from "../../utils/utils"
 
-const SHORT_MOVIE_LENGTH = 40;
 
 export default function SearchForm({ 
   setMovies, 
