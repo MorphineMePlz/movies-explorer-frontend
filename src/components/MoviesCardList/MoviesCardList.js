@@ -31,7 +31,7 @@ export default function MoviesCardList(
 
     useEffect(() => {
         handleSavedMovies();
-
+        
         if (!localStorage.getItem("movies") || isMoviesPath) {
             getBeatMovies();
         }

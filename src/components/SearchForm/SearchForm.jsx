@@ -85,13 +85,14 @@ export default function SearchForm({
       reset({ 
         search: ""
       });
+      setShort(false);
     }
 
     if (location.pathname === "/movies") {
       reset({
         search: initialSettings?.searchValue
       })
-
+      setShort(initialSettings?.isShort || false)
       filterMovies();
     }
   }, [location.pathname]);

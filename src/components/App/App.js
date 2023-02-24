@@ -1,7 +1,7 @@
 //Это для реквеста)
 
 import { useState, useEffect, useCallback } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import MainPage from "../MainPage/MainPage";
 import PageWrapper from "../PageWrapper/PageWrapper";
@@ -21,6 +21,7 @@ import { api } from '../../utils/MoviesApi';
 
 function App() {
   const history = useNavigate();
+  const location = useLocation();
 
   const [isTooltipOpen, setTooltipOpen] = useState(false);
   const [isRequestFailed, setRequestFailed] = useState(false);
@@ -157,7 +158,7 @@ function App() {
   }
 
   const handleSavedMovies = () => {
-    if (localStorage.getItem("settings")) {
+    if (localStorage.getItem("settings") || location.pathname === "/saved-movies") {
       setInitialRender(false);
     }
 
