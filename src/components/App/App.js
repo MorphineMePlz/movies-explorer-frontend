@@ -30,6 +30,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [searchValue, setSearchValue] = useState("");
 
+  const [isInitialRender, setInitialRender] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isUserLoaded, setUserLoaded] = useState(false);
@@ -39,7 +40,6 @@ function App() {
       mainApi
         .getUserInformation()
         .then((info) => {
-          console.log(info)
           setLoggedIn(true)
           setCurrentUser(info)
         })
@@ -82,6 +82,7 @@ function App() {
   };
 
   const handleLogin = ({ email, password }) => {
+    setInitialRender(true);
     mainApi
       .signIn({ email, password })
       .then(() => {
@@ -156,6 +157,10 @@ function App() {
   }
 
   const handleSavedMovies = () => {
+    if (localStorage.getItem("settings")) {
+      setInitialRender(false);
+    }
+
     setLoading(true)
     mainApi
       .getSavedMovies()
@@ -172,16 +177,8 @@ function App() {
       })
   }
 
-  const handleMovies = () => {
-    // считаю, что при первой загрузке странице лучше отображать все фильмы, иначе не понятно, какие вообще фильмы можно искать
-    // если удалить условие ниже - будет на много более юзабельно
-    if (searchValue === "") {
-      setMovies([]);
-
-      return;
-    }
-
-    if (localStorage.getItem("movies") && searchValue !== "") {
+  const getBeatMovies = () => {
+    if (localStorage.getItem("movies")) {
       setMovies(JSON.parse(localStorage.getItem("movies")));
       return;
     }
@@ -208,8 +205,9 @@ function App() {
     <MoviesCardList
       movies={movies}
       savedMovies={savedMovies}
-      handleMovies={handleMovies}
+      getBeatMovies={getBeatMovies}
       onMovieLike={handleSaveMovie}
+      isInitialRender={isInitialRender}
       onMovieDelete={handleDeleteMovie}
       handleSavedMovies={handleSavedMovies}
     />);
@@ -264,6 +262,7 @@ function App() {
                     isLoading={isLoading}
                     initialMovies={initialMovies}
                     getSearchValue={getSearchValue}
+                    cancelInitialRendeState={() => setInitialRender(false)}
                   />
                   {MoviesListWithProps}
                 </ProtectedRoute>
@@ -282,6 +281,7 @@ function App() {
                     isLoading={isLoading}
                     initialMovies={initialSavedMovies}
                     getSearchValue={getSearchValue}
+                    cancelInitialRendeState={() => null}
                   />
                   {MoviesListWithProps}
                 </ProtectedRoute>

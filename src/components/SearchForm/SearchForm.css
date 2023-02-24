@@ -59,6 +59,10 @@
   cursor: pointer;
 }
 
+.search__submit:disabled {
+  opacity: .2;
+}
+
 .search__submit:hover {
   opacity: 0.7;
 }

@@ -18,8 +18,7 @@ export default function MoviesCard(
     }) {
     const { nameRU, duration, image, trailerLink } = movie;
     const [isAdded, setIsAdded] = useState(Boolean(savedMovieData));
-
-    const savedMovieId = isSavedMovies ? movie._id : savedMovieData ? savedMovieData._id : null;
+    const savedMovieId = isSavedMovies ? movie._id : (savedMovieData ? savedMovieData._id : null);
 
     return (<li className='card'>
         <div className='card__box'>
