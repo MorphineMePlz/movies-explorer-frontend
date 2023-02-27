@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form'
+import { useLocation } from 'react-router-dom';
 
 import Container from "../Container/Container";
 
+
 import "./SearchForm.css";
 import "./SearchCheckbox.css";
+import {SHORT_MOVIE_LENGTH} from "../../utils/utils"
 
-const SHORT_MOVIE_LENGTH = 40;
 
-export default function SearchForm({ setMovies, initialMovies, isLoading, getSearchValue }) {
+export default function SearchForm({ 
+  setMovies, 
+  initialMovies, 
+  isLoading, 
+  getSearchValue, 
+  cancelInitialRendeState 
+}) {
+  const location = useLocation();
 
   const initialSettings =
     localStorage.getItem("settings") ?
@@ -23,6 +32,7 @@ export default function SearchForm({ setMovies, initialMovies, isLoading, getSea
   const {
     register,
     watch,
+    reset,
     formState: {
       errors,
     },
@@ -33,7 +43,7 @@ export default function SearchForm({ setMovies, initialMovies, isLoading, getSea
 
   const searchValue = watch('search', initialSettings?.searchValue);
 
-  const filterMoviesByName = () => {
+  const filterMovies = () => {
     let filteredMovies = initialMovies.filter((movie) => movie.nameRU.toLowerCase().includes(searchValue.toLowerCase() || ""));
 
     if (isShort) {
@@ -48,24 +58,45 @@ export default function SearchForm({ setMovies, initialMovies, isLoading, getSea
   };
 
   const handleSubmitSearch = () => {
+    cancelInitialRendeState();
     const newSettings = {
       searchValue,
       isShort
     };
 
-    filterMoviesByName();
-    localStorage.setItem("settings", JSON.stringify(newSettings));
+    filterMovies();
+
+    if (location.pathname !== "/saved-movies") {
+      localStorage.setItem("settings", JSON.stringify(newSettings));
+    }
   }
 
   useEffect(() => {
     if (!isLoading && searchValue !== "") {
-      filterMoviesByName();
+      filterMovies();
     }
   }, [isLoading]);
 
   useEffect(() => {
     getSearchValue(searchValue)
   }, [searchValue]);
+
+  useEffect(() => {
+    if (location.pathname === "/saved-movies") {
+      reset({ 
+        search: ""
+      });
+      setShort(false);
+    }
+
+    if (location.pathname === "/movies") {
+      reset({
+        search: initialSettings?.searchValue
+      })
+      setShort(initialSettings?.isShort || false)
+      filterMovies();
+    }
+  }, [location.pathname]);
 
   return (
     <Container>
@@ -79,14 +110,19 @@ export default function SearchForm({ setMovies, initialMovies, isLoading, getSea
               required: "Поле не должно быть пустым",
               maxLength: {
                 value: 40,
-                message: 'максимум 40 символов'
+                message: 'вы должны заполнить максимум 40 символов'
               },
             })}
             value={searchValue}
           />
-          <div className='search-form__input-error'>{
-            errors?.search && <span className='search-form__input-error-text'>{errors?.search?.message || 'Что-то пошло не так...'}</span>
-          }</div>
+          <div className='search-form__input-error'>
+            {
+            errors?.search && 
+              <span className='search-form__input-error-text'>
+                {errors?.search?.message || 'Что-то пошло не так...'}
+              </span>
+            }
+          </div>
           <button type="submit" className="search__submit" />
         </div>
         <div className="search__checkbox">

@@ -10,12 +10,13 @@ import "./MoviesCardList.css";
 
 export default function MoviesCardList(
     {
-        onMovieLike,
-        onMovieDelete,
-        handleMovies,
-        handleSavedMovies,
+        movies,
         savedMovies,
-        movies
+        onMovieLike,
+        getBeatMovies,
+        onMovieDelete,
+        isInitialRender,
+        handleSavedMovies,
     }
 ) {
     const location = useLocation();
@@ -29,11 +30,11 @@ export default function MoviesCardList(
     const windowWidth = useMemo(() => window.innerWidth, [window.innerWidth]);
 
     useEffect(() => {
-        if (!localStorage.getItem("movies") || isMoviesPath) {
-            handleMovies();
-        }
-
         handleSavedMovies();
+        
+        if (!localStorage.getItem("movies") || isMoviesPath) {
+            getBeatMovies();
+        }
     }, [location.pathname]);
 
     const amountOfCards = useMemo(() => {
@@ -75,12 +76,12 @@ export default function MoviesCardList(
 
     useEffect(() => {
         setSliceAmount(amountOfCards.initial)
-    }, [amountOfCards.initial])
+    }, [amountOfCards.initial]);
 
     return (
         <Container>
-            <ul className={`cards ${moviesForMapping?.length ? "cards_grid" : "cards_flex"}`}>
-                {moviesForMapping?.length ? moviesForMapping
+            <ul className={`cards ${!isInitialRender && moviesForMapping?.length ? "cards_grid" : "cards_flex"}`}>
+                {!isInitialRender && moviesForMapping?.length ? moviesForMapping
                     .slice(0, sliceAmount)
                     .map((movie) => {
                         const savedMovieData = savedMovies.find((m) => m.movieId === movie.id);

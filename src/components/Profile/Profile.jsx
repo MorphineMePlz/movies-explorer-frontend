@@ -5,6 +5,7 @@ import "./Profile.css";
 
 export default function Profile({ handleLogout, handleUpdateUser }) {
   const currentUser = useContext(CurrentUserContext)
+
   const {
     register,
     watch,
@@ -28,12 +29,12 @@ export default function Profile({ handleLogout, handleUpdateUser }) {
     handleUpdateUser({ name, email })
   }
 
-  const InitialStateDisable = (currentUser.name === name && currentUser.email === email)
-  const activeStyleValidateButton = (currentUser.name !== name || currentUser.email !== email)
+  const disableState = (currentUser.name === name && currentUser.email === email)
+  const activeButton = (currentUser.name !== name || currentUser.email !== email)
 
   return (
     <form className='profile' onSubmit={handleSubmit(() => { handleSubmitProfile() })}>
-      <h1 className="profile__heading">{`Привет, ${currentUser.name || ''}!`}</h1>
+      <h1 className="profile__heading">{`Привет, ${currentUser.name}!`}</h1>
       <div className="profile__box">
         <div className="profile__table-line">
           <p className="profile__placeholder">Имя</p>
@@ -44,15 +45,15 @@ export default function Profile({ handleLogout, handleUpdateUser }) {
               required: 'обязательное поле',
               minLength: {
                 value: 2,
-                message: 'минимум 2 символа'
+                message: 'вы должны заполнить минимум 2 символа'
               },
               maxLength: {
                 value: 20,
-                message: 'максимум 20 символов'
+                message: 'вы должны заполнить максимум 20 символов'
               },
               pattern: {
                 value: /^[A-Za-zА-Яа-яЁё /h -]+$/,
-                message: 'Имя должно содержать только латиницу, кириллицу, пробел или дефис'
+                message: 'Имя не должно содержать цифры'
               }
             })}
             value={name}
@@ -82,11 +83,11 @@ export default function Profile({ handleLogout, handleUpdateUser }) {
       }</div>
       <div className="profile__button-box">
         <button type="submit" className={
-          (isValid && activeStyleValidateButton) ? (
+          (isValid && activeButton) ? (
             'profile__button profile__button_active'
           ) : (
             'profile__button profile__button_unactive'
-          )} disabled={InitialStateDisable || !isValid}>
+          )} disabled={disableState || !isValid}>
           Редактировать
         </button>
         <button

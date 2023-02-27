@@ -104,6 +104,8 @@ class MainApi {
             .then((res) => this.handleResponse(res));
     }
 
+
+
     deleteMovie(movieId) {
         return fetch(`${BASE_URL}/movies/${movieId}`, {
             method: "DELETE",

@@ -1,7 +1,7 @@
 //Это для реквеста)
 
 import { useState, useEffect, useCallback } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 import MainPage from "../MainPage/MainPage";
 import PageWrapper from "../PageWrapper/PageWrapper";
@@ -15,13 +15,13 @@ import InfoTooltip from "../InfoTooltip/InfoTooltip"
 
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
-import { NAVIGATION_DELAY } from "../../utils/utils";
 import { mainApi } from "../../utils/MainApi";
 import { api } from '../../utils/MoviesApi';
 
 
 function App() {
   const history = useNavigate();
+  const location = useLocation();
 
   const [isTooltipOpen, setTooltipOpen] = useState(false);
   const [isRequestFailed, setRequestFailed] = useState(false);
@@ -31,9 +31,25 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [searchValue, setSearchValue] = useState("");
 
+  const [isInitialRender, setInitialRender] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isUserLoaded, setUserLoaded] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      mainApi
+        .getUserInformation()
+        .then((info) => {
+          setLoggedIn(true)
+          setCurrentUser(info)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [isLoggedIn])
+
 
   useEffect(() => {
     mainApi
@@ -54,22 +70,20 @@ function App() {
       .signUp({ name, email, password })
       .then((res) => {
         if (res.statusCode !== 400) {
-          setTimeout(() => {
-            history("/signin");
-          }, NAVIGATION_DELAY);
+          handleLogin({ email, password })
+          setRequestFailed(false);
+          setTooltipOpen(false);
         }
       })
       .catch((err) => {
         setRequestFailed(true);
         setTooltipOpen(true);
         console.log(err)
-      }).finally(() => {
-        setRequestFailed(false);
-        setTooltipOpen(false);
       })
   };
 
   const handleLogin = ({ email, password }) => {
+    setInitialRender(true);
     mainApi
       .signIn({ email, password })
       .then(() => {
@@ -144,6 +158,10 @@ function App() {
   }
 
   const handleSavedMovies = () => {
+    if (localStorage.getItem("settings") || location.pathname === "/saved-movies") {
+      setInitialRender(false);
+    }
+
     setLoading(true)
     mainApi
       .getSavedMovies()
@@ -160,15 +178,8 @@ function App() {
       })
   }
 
-  const handleMovies = () => {
-    // считаю, что при первой загрузке странице лучше отображать все фильмы, иначе не понятно, какие вообще фильмы можно искать
-    // если удалить условие ниже - будет на много более юзабельно
-    if (searchValue === "") {
-      setMovies([]);
-      return;
-    }
-
-    if (localStorage.getItem("movies") && searchValue !== "") {
+  const getBeatMovies = () => {
+    if (localStorage.getItem("movies")) {
       setMovies(JSON.parse(localStorage.getItem("movies")));
       return;
     }
@@ -195,8 +206,9 @@ function App() {
     <MoviesCardList
       movies={movies}
       savedMovies={savedMovies}
-      handleMovies={handleMovies}
+      getBeatMovies={getBeatMovies}
       onMovieLike={handleSaveMovie}
+      isInitialRender={isInitialRender}
       onMovieDelete={handleDeleteMovie}
       handleSavedMovies={handleSavedMovies}
     />);
@@ -251,6 +263,7 @@ function App() {
                     isLoading={isLoading}
                     initialMovies={initialMovies}
                     getSearchValue={getSearchValue}
+                    cancelInitialRendeState={() => setInitialRender(false)}
                   />
                   {MoviesListWithProps}
                 </ProtectedRoute>
@@ -269,6 +282,7 @@ function App() {
                     isLoading={isLoading}
                     initialMovies={initialSavedMovies}
                     getSearchValue={getSearchValue}
+                    cancelInitialRendeState={() => null}
                   />
                   {MoviesListWithProps}
                 </ProtectedRoute>
